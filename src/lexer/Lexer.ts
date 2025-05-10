@@ -1,3 +1,5 @@
+import type { Token } from './Token'
+
 const identifierChars = Object.fromEntries(
   [
     // prettier-ignore
@@ -30,11 +32,6 @@ const isOperator = (c: string) => c in operatorChars
 const isWhitespace = (c: string) => c in whitespaceChars
 const isSeparator = (c: string) => c in separatorChars
 const isStringBoundary = (c: string) => c === '"' || c === "'"
-
-export type Token = {
-  type: string
-  value: string
-}
 
 export default class Lexer {
   public constructor(private source: string) {}
