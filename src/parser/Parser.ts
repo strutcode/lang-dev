@@ -1,11 +1,11 @@
 import type { Token } from '../lexer'
-import type { ASTNode } from './AstNode'
+import type { AstNode } from './AstNode'
 
 export default class Parser {
   public constructor(private tokens: Token[]) {}
 
   public parse() {
-    const ast: ASTNode = {
+    const ast: AstNode = {
       type: 'Program',
       block: [],
     }

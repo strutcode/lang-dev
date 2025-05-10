@@ -1,12 +1,12 @@
 type Nodes = {
   Program: {
     type: 'Program'
-    block: ASTNode[]
+    block: AstNode[]
   }
 
   ExpressionStatement: {
     type: 'ExpressionStatement'
-    expression: ASTNode
+    expression: AstNode
   }
 
   StringLiteral: {
@@ -31,4 +31,4 @@ type Nodes = {
   }
 }
 
-export type ASTNode = Nodes[keyof Nodes]
+export type AstNode = Nodes[keyof Nodes]
