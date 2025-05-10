@@ -1,2 +1,2 @@
 export { default as Parser } from './Parser'
-export { AstNode } from './AstNode'
+export type { AstNode } from './AstNode'
