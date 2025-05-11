@@ -9,9 +9,20 @@ type Nodes = {
     expression: AstNode
   }
 
+  AdditionExpression: {
+    type: 'AdditionExpression'
+    left: Nodes['ValueType']
+    right: Nodes['ValueType']
+  }
+
   StringLiteral: {
     type: 'StringLiteral'
     value: string
+  }
+
+  NumericLiteral: {
+    type: 'NumericLiteral'
+    value: number
   }
 
   Identifier: {
@@ -24,10 +35,18 @@ type Nodes = {
     value: 'stdin' | 'stdout' | 'stderr'
   }
 
+  ExpressionType: Nodes['AdditionExpression']
+
+  ValueType:
+    | Nodes['ExpressionType']
+    | Nodes['StringLiteral']
+    | Nodes['NumericLiteral']
+    | Nodes['Identifier']
+
   StreamOutputExpression: {
     type: 'StreamOutputExpression'
     left: Nodes['BuiltIn'] | null
-    right: Nodes['StringLiteral'] | Nodes['Identifier']
+    right: Nodes['ValueType']
   }
 }
 

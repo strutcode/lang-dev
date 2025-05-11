@@ -8,13 +8,30 @@ export default class Interpreter {
   }
 
   private interpretNode(node: AstNode) {
-    if (node.type === 'Program') {
-      for (const childNode of node.block) {
-        this.interpretNode(childNode)
-      }
-    } else if (node.type === 'StreamOutputExpression') {
-      this.handleStreamOutput(node)
+    switch (node.type) {
+      case 'Program':
+        for (const childNode of node.block) {
+          this.interpretNode(childNode)
+        }
+        break
+      case 'StreamOutputExpression':
+        this.handleStreamOutput(node)
+        break
+      case 'AdditionExpression':
+        return this.additionExpression(node)
+      case 'NumericLiteral':
+      case 'StringLiteral':
+        return node.value
+      default:
+        throw new Error(`Unknown node type: ${node.type}`)
     }
+  }
+
+  private additionExpression(node: any): any {
+    const left = this.interpretNode(node.left)
+    const right = this.interpretNode(node.right)
+
+    return left + right
   }
 
   private handleStreamOutput(node: any) {
@@ -22,7 +39,7 @@ export default class Interpreter {
     const right = node.right
 
     if (left.type === 'BuiltIn' && left.value === 'stdout') {
-      console.log(right.value)
+      console.log(this.interpretNode(right))
     }
   }
 }
