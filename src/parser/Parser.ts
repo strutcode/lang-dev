@@ -63,13 +63,43 @@ export default class Parser {
     const block: AstNode[] = []
 
     while (this.token) {
-      block.push(this.expression())
+      block.push(this.statement())
     }
 
     return {
       type: 'Program',
       block,
     }
+  }
+
+  private statement(): AstNode {
+    return this.streamOutput()
+  }
+
+  private streamOutput(): AstNode {
+    if (this.match('operator')('<<')) {
+      const right = this.expression()
+
+      return {
+        type: 'StreamOutputExpression',
+        left: { type: 'BuiltIn', value: 'stdout' },
+        right,
+      }
+    }
+
+    if (this.next?.type === 'operator' && this.next.value === '<<') {
+      const left = this.advance()
+      this.advance() // <<
+      const right = this.expression()
+
+      return {
+        type: 'StreamOutputExpression',
+        left,
+        right,
+      }
+    }
+
+    return this.expression()
   }
 
   private expression() {
