@@ -106,7 +106,33 @@ export default class Parser {
   }
 
   private expression() {
-    return this.term()
+    return this.equality()
+  }
+
+  private equality(): AstNode {
+    let left = this.comparison()
+
+    while (this.match('operator')('==', '!=')) {
+      const operator = this.previous
+      const right = this.comparison()
+
+      left = this.binary(left, operator, right)
+    }
+
+    return left
+  }
+
+  private comparison(): AstNode {
+    let left = this.term()
+
+    while (this.match('operator')('>', '<', '>=', '<=')) {
+      const operator = this.previous
+      const right = this.term()
+
+      left = this.binary(left, operator, right)
+    }
+
+    return left
   }
 
   private term(): AstNode {
@@ -186,6 +212,18 @@ export default class Parser {
         type: 'Identifier',
         value: this.previous.value,
       }
+    }
+
+    if (this.match('separator')('(')) {
+      const expression = this.expression()
+
+      if (!this.match('separator')(')')) {
+        throw new Error(
+          `Expected ')' after expression, got ${this.token?.value} (${this.token?.type})`,
+        )
+      }
+
+      return expression
     }
 
     throw new Error(`Unexpected token: ${this.token?.value} (${this.token?.type})`)

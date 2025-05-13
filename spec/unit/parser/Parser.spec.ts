@@ -91,4 +91,42 @@ describe('Parser', () => {
       ],
     })
   })
+
+  it('allows parenthesized expressions', () => {
+    const tokens = [
+      { type: 'number', value: '1' },
+      { type: 'operator', value: '*' },
+      { type: 'number', value: '2' },
+      { type: 'operator', value: '-' },
+      { type: 'separator', value: '(' },
+      { type: 'number', value: '3' },
+      { type: 'operator', value: '+' },
+      { type: 'number', value: '4' },
+      { type: 'separator', value: ')' },
+    ]
+    const parser = new Parser(tokens)
+    const ast = parser.parse()
+
+    expect(ast).toEqual({
+      type: 'Program',
+      block: [
+        {
+          type: 'BinaryExpression',
+          operator: '-',
+          left: {
+            type: 'BinaryExpression',
+            operator: '*',
+            left: { type: 'NumericLiteral', value: 1 },
+            right: { type: 'NumericLiteral', value: 2 },
+          },
+          right: {
+            type: 'BinaryExpression',
+            operator: '+',
+            left: { type: 'NumericLiteral', value: 3 },
+            right: { type: 'NumericLiteral', value: 4 },
+          },
+        },
+      ],
+    })
+  })
 })
