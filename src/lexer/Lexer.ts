@@ -26,6 +26,7 @@ const separatorChars = Object.fromEntries(
   ['(', ')', '{', '}', '[', ']', ',', ';', ':', '.', '`'].map(c => [c, true]),
 )
 
+const isIdentifierStart = (c: string) => !(c in numberChars) && c in identifierChars
 const isIdentifier = (c: string) => c in identifierChars
 const isNumber = (c: string) => c in numberChars
 const isOperator = (c: string) => c in operatorChars
@@ -74,7 +75,7 @@ export default class Lexer {
         continue
       }
 
-      if (isIdentifier(char)) {
+      if (isIdentifierStart(char)) {
         tokens.push({ type: 'identifier', value: parseToken(isIdentifier) })
         continue
       }
