@@ -11,7 +11,7 @@ type Nodes = {
 
   BinaryExpression: {
     type: 'BinaryExpression'
-    operator: string
+    operator: '+' | '-' | '*' | '/' | '==' | '!=' | '<' | '<=' | '>' | '>='
     left: Nodes['ValueType']
     right: Nodes['ValueType']
   }
@@ -45,7 +45,8 @@ type Nodes = {
     | Nodes['Identifier']
 
   StreamOutputExpression: {
-    type: 'StreamOutputExpression'
+    type: 'StreamExpression'
+    operator: '<<' | '>>'
     left: Nodes['BuiltIn'] | null
     right: Nodes['ValueType']
   }

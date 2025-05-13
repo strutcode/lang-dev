@@ -14,11 +14,11 @@ export default class Interpreter {
           this.interpretNode(childNode)
         }
         break
-      case 'StreamOutputExpression':
-        this.handleStreamOutput(node)
+      case 'StreamExpression':
+        this.handleStream(node)
         break
       case 'BinaryExpression':
-        return this.additionExpression(node)
+        return this.binaryExpression(node)
       case 'NumericLiteral':
       case 'StringLiteral':
         return node.value
@@ -27,14 +27,37 @@ export default class Interpreter {
     }
   }
 
-  private additionExpression(node: any): any {
+  private binaryExpression(node: any): any {
     const left = this.interpretNode(node.left)
     const right = this.interpretNode(node.right)
 
-    return left + right
+    switch (node.operator) {
+      case '+':
+        return left + right
+      case '-':
+        return left - right
+      case '*':
+        return left * right
+      case '/':
+        return left / right
+      case '==':
+        return left === right
+      case '!=':
+        return left !== right
+      case '<':
+        return left < right
+      case '<=':
+        return left <= right
+      case '>':
+        return left > right
+      case '>=':
+        return left >= right
+      default:
+        throw new Error(`Unknown operator: ${node.operator}`)
+    }
   }
 
-  private handleStreamOutput(node: any) {
+  private handleStream(node: any) {
     const left = node.left
     const right = node.right
 

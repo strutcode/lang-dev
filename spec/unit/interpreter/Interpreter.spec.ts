@@ -7,7 +7,7 @@ describe('Interpreter', () => {
       type: 'Program',
       block: [
         {
-          type: 'StreamOutputExpression',
+          type: 'StreamExpression',
           left: {
             type: 'BuiltIn',
             value: 'stdout',
@@ -34,7 +34,7 @@ describe('Interpreter', () => {
       type: 'Program',
       block: [
         {
-          type: 'StreamOutputExpression',
+          type: 'StreamExpression',
           left: {
             type: 'BuiltIn',
             value: 'stdout',
