@@ -13,7 +13,36 @@ describe('Parser', () => {
       type: 'Program',
       block: [
         {
-          type: 'StreamOutputExpression',
+          type: 'StreamExpression',
+          operator: '<<',
+          left: {
+            type: 'BuiltIn',
+            value: 'stdout',
+          },
+          right: {
+            type: 'StringLiteral',
+            value: 'Hello world!',
+          },
+        },
+      ],
+    })
+  })
+
+  it('can parse long form hello world', () => {
+    const tokens = [
+      { type: 'identifier', value: 'stdout' },
+      { type: 'operator', value: '<<' },
+      { type: 'string', value: 'Hello world!' },
+    ]
+    const parser = new Parser(tokens)
+    const ast = parser.parse()
+
+    expect(ast).toEqual({
+      type: 'Program',
+      block: [
+        {
+          type: 'StreamExpression',
+          operator: '<<',
           left: {
             type: 'BuiltIn',
             value: 'stdout',

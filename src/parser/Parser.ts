@@ -73,27 +73,30 @@ export default class Parser {
   }
 
   private statement(): AstNode {
-    return this.streamOutput()
+    return this.stream()
   }
 
-  private streamOutput(): AstNode {
-    if (this.match('operator')('<<')) {
+  private stream(): AstNode {
+    if (this.match('operator')('<<', '>>')) {
+      const operator = this.previous.value
       const right = this.expression()
 
       return {
-        type: 'StreamOutputExpression',
+        type: 'StreamExpression',
+        operator,
         left: { type: 'BuiltIn', value: 'stdout' },
         right,
       }
     }
 
-    if (this.next?.type === 'operator' && this.next.value === '<<') {
-      const left = this.advance()
-      this.advance() // <<
+    if (this.next?.type == 'operator' && (this.next.value == '<<' || this.next.value == '>>')) {
+      const left = this.primary()
+      const operator = this.advance().value
       const right = this.expression()
 
       return {
-        type: 'StreamOutputExpression',
+        type: 'StreamExpression',
+        operator,
         left,
         right,
       }
