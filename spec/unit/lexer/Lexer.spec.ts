@@ -1,4 +1,4 @@
-import { Lexer } from '../../src/lexer'
+import { Lexer } from '../../../src/lexer'
 
 describe('Lexer', () => {
   it('should tokenize hello world', () => {

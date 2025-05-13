@@ -1,5 +1,5 @@
-import { Interpreter } from '../../src/interpreter'
-import { AstNode } from '../../src/parser'
+import { Interpreter } from '../../../src/interpreter'
+import { AstNode } from '../../../src/parser'
 
 describe('Interpreter', () => {
   it('can interpret hello world', () => {
@@ -40,13 +40,15 @@ describe('Interpreter', () => {
             value: 'stdout',
           },
           right: {
-            type: 'AdditionExpression',
+            type: 'BinaryExpression',
+            operator: '+',
             left: {
               type: 'StringLiteral',
               value: 'Hello ',
             },
             right: {
-              type: 'AdditionExpression',
+              type: 'BinaryExpression',
+              operator: '+',
               left: {
                 type: 'NumericLiteral',
                 value: 40,

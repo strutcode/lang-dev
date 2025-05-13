@@ -17,7 +17,7 @@ export default class Interpreter {
       case 'StreamOutputExpression':
         this.handleStreamOutput(node)
         break
-      case 'AdditionExpression':
+      case 'BinaryExpression':
         return this.additionExpression(node)
       case 'NumericLiteral':
       case 'StringLiteral':

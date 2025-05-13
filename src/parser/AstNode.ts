@@ -9,8 +9,9 @@ type Nodes = {
     expression: AstNode
   }
 
-  AdditionExpression: {
-    type: 'AdditionExpression'
+  BinaryExpression: {
+    type: 'BinaryExpression'
+    operator: string
     left: Nodes['ValueType']
     right: Nodes['ValueType']
   }
@@ -35,7 +36,7 @@ type Nodes = {
     value: 'stdin' | 'stdout' | 'stderr'
   }
 
-  ExpressionType: Nodes['AdditionExpression']
+  ExpressionType: Nodes['BinaryExpression']
 
   ValueType:
     | Nodes['ExpressionType']

@@ -1,8 +1,8 @@
-import Server from std::http
+import Server from std/http
 
 new Server
   request >> (head, body, response):
-    switch head.path:
+    when head.path:
       ~= "/foo":
         response << 200
         response << "Page 1"
