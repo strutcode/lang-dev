@@ -4,19 +4,19 @@ export default class Interpreter {
   public constructor(private ast: AstNode) {}
 
   public interpret() {
-    this.interpretNode(this.ast)
+    return this.interpretNode(this.ast)
   }
 
-  private interpretNode(node: AstNode) {
+  private interpretNode(node: AstNode): any {
     switch (node.type) {
       case 'Program':
+        let value
         for (const childNode of node.block) {
-          this.interpretNode(childNode)
+          value = this.interpretNode(childNode)
         }
-        break
+        return value
       case 'StreamExpression':
-        this.handleStream(node)
-        break
+        return this.handleStream(node)
       case 'BinaryExpression':
         return this.binaryExpression(node)
       case 'NumericLiteral':
