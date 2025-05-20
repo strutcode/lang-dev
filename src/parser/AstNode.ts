@@ -16,6 +16,12 @@ type Nodes = {
     right: Nodes['ValueType']
   }
 
+  UnaryExpression: {
+    type: 'UnaryExpression'
+    operator: '!' | '-'
+    right: Nodes['ValueType']
+  }
+
   StringLiteral: {
     type: 'StringLiteral'
     value: string
@@ -36,7 +42,7 @@ type Nodes = {
     value: 'stdin' | 'stdout' | 'stderr'
   }
 
-  ExpressionType: Nodes['BinaryExpression']
+  ExpressionType: Nodes['BinaryExpression'] | Nodes['UnaryExpression']
 
   ValueType:
     | Nodes['ExpressionType']

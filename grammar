@@ -1,3 +1,7 @@
+program: stmt* EOF
+
+stmt: (control | signal | stream) ("\n" | ";")
+
 expr: (binary | unary | group | literal | call) ("\n" | ";")
 
 unary: ("!" | "-") expr
@@ -6,6 +10,4 @@ binary: expr operator expr
 
 operator: "+" | "-" | "*" | "/" | "!=" | "==" | "~=" | "<=" | ">="
 
-statement: control | signal | stream
-
-control: "if" | "elif" | "else" | "for" | "while" | "switch"
+control: "when" | "for" | "while"

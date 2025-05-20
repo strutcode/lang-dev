@@ -78,7 +78,7 @@ export default class Parser {
 
   private stream(): AstNode {
     if (this.match('operator')('<<', '>>')) {
-      const operator = this.previous.value
+      const operator = this.previous.value as '<<' | '>>'
       const right = this.expression()
 
       return {
@@ -91,7 +91,7 @@ export default class Parser {
 
     if (this.next?.type == 'operator' && (this.next.value == '<<' || this.next.value == '>>')) {
       const left = this.primary()
-      const operator = this.advance().value
+      const operator = this.advance().value as '<<' | '>>'
       const right = this.expression()
 
       return {
@@ -172,12 +172,12 @@ export default class Parser {
 
   private unary(): AstNode {
     while (this.match('operator')('!', '-')) {
-      const operator = this.previous
+      const operator = this.previous.value as '!' | '-'
       const right = this.unary()
 
       return {
         type: 'UnaryExpression',
-        operator: operator,
+        operator,
         right,
       }
     }
