@@ -2,8 +2,11 @@ import { script } from '../executor'
 
 describe('Variables', () => {
   it('can assign and use variables', () => {
-    const res = script('var a = 12')
+    console.log = vi.fn()
 
-    expect(res.interpreter.global('a')).toEqual(12)
+    const { interpreter } = script('var a = 12; << a')
+
+    expect(interpreter.global('a')).toEqual(12)
+    expect(console.log).toHaveBeenCalledWith(12)
   })
 })

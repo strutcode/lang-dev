@@ -34,6 +34,10 @@ export default class Interpreter {
       case 'NumericLiteral':
       case 'StringLiteral':
         return node.value
+      case 'Identifier':
+        if (this.globals[node.value] != null) {
+          return this.globals[node.value]
+        }
       default:
         throw new Error(`Unknown node type: ${node.type}`)
     }
