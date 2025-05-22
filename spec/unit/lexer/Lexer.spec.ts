@@ -21,4 +21,25 @@ describe('Lexer', () => {
       { type: 'string', value: 'Hello again!' },
     ])
   })
+
+  it('can handle variable assignment', () => {
+    const source = `
+      u32 x = 42
+      var y = x + 1
+    `
+
+    expect(new Lexer(source).tokenize()).toEqual([
+      { type: 'identifier', value: 'u32' },
+      { type: 'identifier', value: 'x' },
+      { type: 'operator', value: '=' },
+      { type: 'number', value: '42' },
+      { type: 'separator', value: '\n' },
+      { type: 'identifier', value: 'var' },
+      { type: 'identifier', value: 'y' },
+      { type: 'operator', value: '=' },
+      { type: 'identifier', value: 'x' },
+      { type: 'operator', value: '+' },
+      { type: 'number', value: '1' },
+    ])
+  })
 })

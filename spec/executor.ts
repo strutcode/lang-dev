@@ -5,5 +5,11 @@ import { Parser } from '../src/parser'
 export function script(source: string) {
   const tokens = new Lexer(source).tokenize()
   const ast = new Parser(tokens).parse()
-  return new Interpreter(ast).interpret()
+  const interpreter = new Interpreter(ast)
+  const result = interpreter.interpret()
+
+  return {
+    interpreter,
+    result,
+  }
 }

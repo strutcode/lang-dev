@@ -86,11 +86,17 @@ export default class Parser {
     return {
       type: 'Program',
       block,
-    }
+    } as const
   }
 
   private statement(): AstNode {
-    const stmt = this.stream()
+    let stmt
+
+    if (this.match('identifier')('var', 'str', 'i32', 'u32', 'f32')) {
+      stmt = this.initialAssignment()
+    } else {
+      stmt = this.stream()
+    }
 
     // If there are no more tokens, we've reached the end of the file which is also a valid separator
     if (!this.token) {
@@ -100,6 +106,29 @@ export default class Parser {
     this.expect('separator')('\n', ';')
 
     return stmt
+  }
+
+  private initialAssignment(): AstNode {
+    const type = this.previous.value
+
+    if (!this.matchType('identifier')) {
+      throw new Error(`Expected identifier, got ${this.token?.value} (${this.token?.type})`)
+    }
+
+    const identifier = this.previous
+    const operator = this.expect('operator')('=')
+    const right = this.expression()
+
+    return {
+      type: 'AssignmentStatement',
+      dataType: type,
+      operator: operator.value,
+      left: {
+        type: 'Identifier',
+        value: identifier.value,
+      },
+      right,
+    }
   }
 
   private stream(): AstNode {

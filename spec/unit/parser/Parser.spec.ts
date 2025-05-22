@@ -171,4 +171,34 @@ describe('Parser', () => {
       ],
     })
   })
+
+  it('can parse a program with a variable assignment', () => {
+    const tokens = [
+      { type: 'identifier', value: 'var' },
+      { type: 'identifier', value: 'x' },
+      { type: 'operator', value: '=' },
+      { type: 'number', value: '42' },
+    ]
+    const parser = new Parser(tokens)
+    const ast = parser.parse()
+
+    expect(ast).toEqual({
+      type: 'Program',
+      block: [
+        {
+          type: 'AssignmentStatement',
+          dataType: 'var',
+          operator: '=',
+          left: {
+            type: 'Identifier',
+            value: 'x',
+          },
+          right: {
+            type: 'NumericLiteral',
+            value: 42,
+          },
+        },
+      ],
+    })
+  })
 })

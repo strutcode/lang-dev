@@ -70,4 +70,33 @@ describe('Interpreter', () => {
 
     expect(console.log).toHaveBeenCalledWith('Hello 42')
   })
+
+  it('can interpret a variable assignment', () => {
+    // << "Hello " + (40 + 2)
+    const ast = {
+      type: 'Program',
+      block: [
+        {
+          type: 'AssignmentStatement',
+          operator: '=',
+          dataType: 'i32',
+          left: {
+            type: 'Identifier',
+            value: 'x',
+          },
+          right: {
+            type: 'NumericLiteral',
+            value: 2,
+          },
+        },
+      ],
+    } as AstNode
+
+    console.log = vi.fn()
+
+    const interpreter = new Interpreter(ast)
+    interpreter.interpret()
+
+    expect(interpreter.globals).toHaveProperty('x', 2)
+  })
 })
