@@ -27,6 +27,23 @@ export default class Parser {
     return this.previous
   }
 
+  private expect(type: string) {
+    return (...values: string[]) => {
+      const typeMatches = this.token?.type === type
+      const valueMatches = values?.includes(this.token?.value)
+
+      if (!typeMatches || !valueMatches) {
+        throw new Error(
+          `Expected ${type} (${values.join(', ').replace('\n', '\\n')}), got ${
+            this.token?.type ?? 'nil'
+          }`,
+        )
+      }
+
+      return this.advance()
+    }
+  }
+
   private matchType(type: string) {
     if (!this.token) {
       return false
@@ -73,7 +90,16 @@ export default class Parser {
   }
 
   private statement(): AstNode {
-    return this.stream()
+    const stmt = this.stream()
+
+    // If there are no more tokens, we've reached the end of the file which is also a valid separator
+    if (!this.token) {
+      return stmt
+    }
+
+    this.expect('separator')('\n', ';')
+
+    return stmt
   }
 
   private stream(): AstNode {

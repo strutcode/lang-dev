@@ -129,4 +129,46 @@ describe('Parser', () => {
       ],
     })
   })
+
+  it('can parse a program with multiple statements', () => {
+    const tokens = [
+      { type: 'operator', value: '<<' },
+      { type: 'string', value: 'Hello world!' },
+      { type: 'separator', value: '\n' },
+      { type: 'operator', value: '<<' },
+      { type: 'string', value: 'Hello again!' },
+    ]
+    const parser = new Parser(tokens)
+    const ast = parser.parse()
+
+    expect(ast).toEqual({
+      type: 'Program',
+      block: [
+        {
+          type: 'StreamExpression',
+          operator: '<<',
+          left: {
+            type: 'BuiltIn',
+            value: 'stdout',
+          },
+          right: {
+            type: 'StringLiteral',
+            value: 'Hello world!',
+          },
+        },
+        {
+          type: 'StreamExpression',
+          operator: '<<',
+          left: {
+            type: 'BuiltIn',
+            value: 'stdout',
+          },
+          right: {
+            type: 'StringLiteral',
+            value: 'Hello again!',
+          },
+        },
+      ],
+    })
+  })
 })

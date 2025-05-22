@@ -21,7 +21,7 @@ const operatorChars = Object.fromEntries(
     ...['+', '-', '*', '/', '=', '<', '>', '!', '&', '|', '^', '%', '~', '?', '@', '#', '$'],
   ].map(c => [c, true]),
 )
-const whitespaceChars = Object.fromEntries([...[' ', '\t', '\n', '\r']].map(c => [c, true]))
+const whitespaceChars = Object.fromEntries([...[' ', '\t', '\r']].map(c => [c, true]))
 const separatorChars = Object.fromEntries(
   ['(', ')', '{', '}', '[', ']', ',', ';', ':', '.', '`'].map(c => [c, true]),
 )
@@ -63,6 +63,24 @@ export default class Lexer {
     while (index < this.source.length) {
       const char = this.source[index]
 
+      // Line breaks are special cases
+      if (char === '\n') {
+        index++
+
+        if (tokens.length == 0) {
+          // Ignore leading newlines
+          continue
+        }
+
+        if (tokens[tokens.length - 1].type === 'newline') {
+          // Condense consecutive newlines
+          continue
+        }
+
+        tokens.push({ type: 'separator', value: '\n' })
+        continue
+      }
+
       if (isWhitespace(char)) {
         index++
         continue
@@ -96,6 +114,11 @@ export default class Lexer {
       }
 
       throw new Error(`Unexpected character: ${char} at index ${index}`)
+    }
+
+    // Remove trailing newlines
+    while (tokens.length > 0 && tokens[tokens.length - 1].value === '\n') {
+      tokens.pop()
     }
 
     return tokens
