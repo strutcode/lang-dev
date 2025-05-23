@@ -26,11 +26,13 @@ export default class Interpreter {
         }
         return value
       case 'StreamExpression':
-        return this.handleStream(node)
+        return this.streamStatement(node)
       case 'BinaryExpression':
         return this.binaryExpression(node)
       case 'AssignmentStatement':
         return this.assignmentStatement(node)
+      case 'ReassignmentStatement':
+        return this.reassignmentStatement(node)
       case 'NumericLiteral':
       case 'StringLiteral':
         return node.value
@@ -85,7 +87,24 @@ export default class Interpreter {
     }
   }
 
-  private handleStream(node: any) {
+  private reassignmentStatement(node: any) {
+    const left = node.left
+
+    if (!this.globals.hasOwnProperty(left.value)) {
+      throw new Error(`Variable ${left.value} is not defined`)
+    }
+
+    const right = this.interpretNode(node.right)
+
+    if (node.operator === '=') {
+      this.globals[left.value] = right
+      return right
+    } else {
+      throw new Error(`Unknown assignment operator: ${node.operator}`)
+    }
+  }
+
+  private streamStatement(node: any) {
     const left = node.left
     const right = node.right
 

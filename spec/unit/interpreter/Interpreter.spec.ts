@@ -99,4 +99,45 @@ describe('Interpreter', () => {
 
     expect(interpreter.globals).toHaveProperty('x', 2)
   })
+
+  it('can interpret variable reassignment', () => {
+    // << "Hello " + (40 + 2)
+    const ast = {
+      type: 'Program',
+      block: [
+        {
+          type: 'AssignmentStatement',
+          operator: '=',
+          dataType: 'i32',
+          left: {
+            type: 'Identifier',
+            value: 'x',
+          },
+          right: {
+            type: 'NumericLiteral',
+            value: 2,
+          },
+        },
+        {
+          type: 'ReassignmentStatement',
+          operator: '=',
+          left: {
+            type: 'Identifier',
+            value: 'x',
+          },
+          right: {
+            type: 'NumericLiteral',
+            value: 3,
+          },
+        },
+      ],
+    } as AstNode
+
+    console.log = vi.fn()
+
+    const interpreter = new Interpreter(ast)
+    interpreter.interpret()
+
+    expect(interpreter.globals).toHaveProperty('x', 3)
+  })
 })

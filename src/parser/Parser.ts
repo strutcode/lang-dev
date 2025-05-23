@@ -93,7 +93,13 @@ export default class Parser {
     let stmt
 
     if (this.match('identifier')('var', 'str', 'i32', 'u32', 'f32')) {
-      stmt = this.initialAssignment()
+      stmt = this.assignment()
+    } else if (this.matchType('identifier')) {
+      if (this.token?.type == 'operator' && this.token.value == '<<') {
+        stmt = this.stream()
+      } else {
+        stmt = this.reassignment()
+      }
     } else {
       stmt = this.stream()
     }
@@ -108,7 +114,7 @@ export default class Parser {
     return stmt
   }
 
-  private initialAssignment(): AstNode {
+  private assignment(): AstNode {
     const type = this.previous.value
 
     if (!this.matchType('identifier')) {
@@ -116,6 +122,28 @@ export default class Parser {
     }
 
     const identifier = this.previous
+    const operator = this.expect('operator')('=')
+    const right = this.expression()
+
+    return {
+      type: 'AssignmentStatement',
+      dataType: type,
+      operator: operator.value,
+      left: {
+        type: 'Identifier',
+        value: identifier.value,
+      },
+      right,
+    }
+  }
+
+  private reassignment(): AstNode {
+    const identifier = this.previous
+
+    if (!this.matchType('identifier')) {
+      throw new Error(`Expected identifier, got ${this.token?.value} (${this.token?.type})`)
+    }
+
     const operator = this.expect('operator')('=')
     const right = this.expression()
 
